@@ -1,10 +1,17 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import * as DocumentPicker from "expo-document-picker";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
+
+import { useEffect, useRef, useState } from "react";
+import { Alert, Animated, Pressable, Text, View } from "react-native";
 import Pdf from "react-native-pdf";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import Pause from "lucide-react-native/icons/pause";
+import Play from "lucide-react-native/icons/play";
+import RotateCcw from "lucide-react-native/icons/rotate-ccw";
+import RotateCw from "lucide-react-native/icons/rotate-cw";
+import X from "lucide-react-native/icons/x";
 
 type AudioFile = {
   name: string;
@@ -27,6 +34,11 @@ export default function HomeScreen() {
   const [trackIndex, setTrackIndex] = useState(0);
 
   const [progressWidth, setProgressWidth] = useState(0);
+
+  const [pdfControlsVisible, setPdfControlsVisible] = useState(false);
+  const toolbarOpacity = useRef(new Animated.Value(0)).current;
+  const hideControlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStart = useRef({ x: 0, y: 0, time: 0 });
 
   const player = useAudioPlayer(null);
   const status = useAudioPlayerStatus(player);
@@ -140,6 +152,54 @@ export default function HomeScreen() {
   const progress =
     status.duration > 0 ? Math.min(status.currentTime / status.duration, 1) : 0;
 
+  function clearHideControlsTimer() {
+    if (hideControlsTimer.current) {
+      clearTimeout(hideControlsTimer.current);
+      hideControlsTimer.current = null;
+    }
+  }
+
+  function hidePdfControls() {
+    clearHideControlsTimer();
+
+    Animated.timing(toolbarOpacity, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setPdfControlsVisible(false);
+    });
+  }
+
+  function showPdfControls() {
+    clearHideControlsTimer();
+    setPdfControlsVisible(true);
+
+    Animated.timing(toolbarOpacity, {
+      toValue: 1,
+      duration: 180,
+      useNativeDriver: true,
+    }).start();
+
+    hideControlsTimer.current = setTimeout(() => {
+      hidePdfControls();
+    }, 10_000);
+  }
+
+  function togglePdfControls() {
+    if (pdfControlsVisible) {
+      hidePdfControls();
+    } else {
+      showPdfControls();
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      clearHideControlsTimer();
+    };
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-insaat-background">
       <StatusBar style="light" />
@@ -187,7 +247,31 @@ export default function HomeScreen() {
         {/* PDF reading area */}
         <View className="min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-insaat-surface">
           {pdfUri ? (
-            <View className="flex-1">
+            <View
+              className="flex-1"
+              onTouchStart={(event) => {
+                touchStart.current = {
+                  x: event.nativeEvent.pageX,
+                  y: event.nativeEvent.pageY,
+                  time: Date.now(),
+                };
+              }}
+              onTouchEnd={(event) => {
+                const dx = Math.abs(
+                  event.nativeEvent.pageX - touchStart.current.x,
+                );
+                const dy = Math.abs(
+                  event.nativeEvent.pageY - touchStart.current.y,
+                );
+                const elapsed = Date.now() - touchStart.current.time;
+
+                // Only treat a short, stationary touch as a tap.
+                // Scrolling and swiping through PDF pages won't toggle the toolbar.
+                if (dx < 10 && dy < 10 && elapsed < 350) {
+                  togglePdfControls();
+                }
+              }}
+            >
               <Pdf
                 source={{ uri: pdfUri }}
                 style={{ flex: 1, width: "100%", height: "100%" }}
@@ -201,20 +285,52 @@ export default function HomeScreen() {
                 }}
               />
 
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close PDF"
-                onPress={() => {
-                  setPdfUri(null);
-                  setPdfName(null);
-                }}
-                className="absolute right-3 top-3 h-10 w-10 items-center justify-center rounded-full bg-insaat-background"
-                style={{ elevation: 5 }}
-              >
-                <Text className="text-xl font-semibold text-insaat-text">
-                  ×
-                </Text>
-              </Pressable>
+              {pdfControlsVisible && (
+                <Animated.View
+                  pointerEvents="box-none"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    paddingHorizontal: 12,
+                    paddingTop: 12,
+                    opacity: toolbarOpacity,
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    gap: 10,
+                  }}
+                >
+                  <View
+                    pointerEvents="none"
+                    className="flex-1 rounded-full bg-insaat-background/70 px-3 py-2"
+                    style={{ minWidth: 0 }}
+                  >
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      className="text-sm font-semibold text-insaat-text"
+                    >
+                      {pdfName ?? "PDF document"}
+                    </Text>
+                  </View>
+
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Close PDF"
+                    onPress={() => {
+                      clearHideControlsTimer();
+                      toolbarOpacity.setValue(0);
+                      setPdfControlsVisible(false);
+                      setPdfUri(null);
+                      setPdfName(null);
+                    }}
+                    className="h-9 w-9 items-center justify-center rounded-full bg-insaat-background/70"
+                  >
+                    <X size={16} color="#F4F1E8" strokeWidth={1.8} />
+                  </Pressable>
+                </Animated.View>
+              )}
             </View>
           ) : (
             <View className="flex-1 items-center justify-center px-6">
@@ -327,11 +443,12 @@ export default function HomeScreen() {
             <View className="flex-row items-center gap-7">
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Previous track"
+                accessibilityLabel="Rewind 10 seconds"
                 onPress={() => void skipSeconds(-10)}
                 hitSlop={10}
+                className="items-center justify-center"
               >
-                <Text className="text-lg text-insaat-muted">↶</Text>
+                <RotateCcw size={22} color="#A5A5AD" strokeWidth={1.8} />
               </Pressable>
 
               <Pressable
@@ -342,18 +459,31 @@ export default function HomeScreen() {
                 onPress={togglePlayback}
                 className="h-12 w-12 items-center justify-center rounded-full bg-insaat-accent"
               >
-                <Text className="text-lg text-insaat-background">
-                  {status.playing ? "Ⅱ" : "▶"}
-                </Text>
+                {status.playing ? (
+                  <Pause
+                    size={22}
+                    color="#101114"
+                    fill="#101114"
+                    strokeWidth={1.8}
+                  />
+                ) : (
+                  <Play
+                    size={22}
+                    color="#101114"
+                    fill="#101114"
+                    strokeWidth={1.8}
+                  />
+                )}
               </Pressable>
 
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Next track"
+                accessibilityLabel="Forward 10 seconds"
                 onPress={() => void skipSeconds(10)}
                 hitSlop={10}
+                className="items-center justify-center"
               >
-                <Text className="text-lg text-insaat-muted">↷</Text>
+                <RotateCw size={22} color="#A5A5AD" strokeWidth={1.8} />
               </Pressable>
             </View>
 
