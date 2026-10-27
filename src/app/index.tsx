@@ -224,14 +224,6 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Open audio library"
-            onPress={chooseAudio}
-            className="h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-insaat-surface"
-          >
-            <Text className="text-xl text-insaat-text">☰</Text>
-          </Pressable>
         </View>
 
         {/* Reading section heading */}
