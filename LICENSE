@@ -1,21 +1,28 @@
-The MIT License (MIT)
+Insaat Source-Available License
 
-Copyright (c) 2015-present 650 Industries, Inc. (aka Expo)
+Copyright (c) 2026 Sayeed Munees
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Purpose and Overview
+This software, Insaat ("the Software"), is made available on a source-available basis. It is not open-source software under an OSI-approved license. By accessing, downloading, compiling, or running the Software, you agree to the terms and conditions set forth herein.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Permissions Granted
+Subject to the terms and restrictions in this License, the copyright holder grants individuals a limited, non-exclusive, revocable, non-transferable, and non-sublicensable license to:
+  a. View and inspect the source code for learning, code audit, and evaluation purposes;
+  b. Download, build, and run the Software solely for personal, non-commercial use on personal devices;
+  c. Report bugs, submit feature suggestions, and submit contributions or pull requests directly to the official Insaat repository (https://github.com/sayeedmunees/insaat).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. Restrictions and Prohibitions
+Except as expressly authorized in Section 2, you may NOT:
+  a. Distribute, redistribute, mirror, publish, upload, or make available copies of the Software, its source code, compiled binaries (including APKs, AABs, or executables), or modified versions to third parties without prior written permission from the copyright holder;
+  b. Publish, distribute, or repackage the Software or any derivative work on any application marketplace, store, or platform, including but not limited to Google Play, the Apple App Store, F-Droid, or third-party APK repositories;
+  c. Sell, rent, lease, monetize, sublicense, or commercially exploit the Software, its binary builds, or its source code in any manner;
+  d. Remove, alter, or obscure any copyright notices, branding, or license statements present in the Software.
+
+4. Modifications and Forks
+You may modify the source code strictly for your own personal, non-commercial use on your personal devices, provided that such modifications are not distributed or shared with third parties. Forking the repository on GitHub is permitted solely for the purpose of creating and submitting pull requests back to the official upstream repository.
+
+5. Contributions
+By submitting any contribution, code change, documentation, or pull request to the Insaat project, you grant the copyright holder a perpetual, irrevocable, worldwide, royalty-free, fully transferable, and sublicensable license to use, modify, distribute, and license your contribution as part of the Software under these or any other terms selected by the copyright holder.
+
+6. Disclaimer of Warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
