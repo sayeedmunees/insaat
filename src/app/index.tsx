@@ -204,7 +204,10 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView edges={["top", "left", "right"]} className="flex-1 bg-insaat-background">
+    <SafeAreaView
+      edges={["top", "left", "right"]}
+      className="flex-1 bg-insaat-background"
+    >
       <StatusBar style="light" />
 
       <View className="flex-1 px-5 pt-3 pb-1">
@@ -230,7 +233,7 @@ export default function HomeScreen() {
 
         {/* Reading section heading */}
         {/* <View className="mb-4">
-          <Text className="text-xs font-semibold uppercase tracking-widest text-insaat-accent">
+          <Text className="text-xs font-semibold  tracking-widest text-insaat-accent">
             YOUR READING SPACE
           </Text>
           <Text className="mt-1 text-xl font-semibold text-insaat-text">

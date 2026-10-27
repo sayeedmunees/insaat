@@ -65,7 +65,7 @@ function SettingRow({
 
 function SectionTitle({ children }: { children: string }) {
   return (
-    <Text className="mt-2 text-xs font-semibold uppercase tracking-widest text-insaat-muted">
+    <Text className="mt-2 text-xs font-semibold  tracking-widest text-insaat-muted">
       {children}
     </Text>
   );
