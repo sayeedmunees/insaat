@@ -1,11 +1,10 @@
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, Keyframe } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-const INITIAL_SCALE_FACTOR = Dimensions.get('screen').height / 90;
 const DURATION = 600;
 
 export function AnimatedSplashOverlay() {
@@ -28,12 +27,22 @@ export function AnimatedSplashOverlay() {
     },
     100: {
       opacity: 0,
-      transform: [{ scale: 1 }],
+      transform: [{ scale: 0.98 }],
       easing: Easing.elastic(0.7),
     },
   });
 
-  const image = <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />;
+  const content = (
+    <View style={styles.contentContainer}>
+      <Image
+        style={styles.splashImage}
+        source={require('@/assets/images/splash-icon.png')}
+        contentFit="contain"
+      />
+      <Text style={styles.title}>Insaat</Text>
+      <Text style={styles.subtitle}>Listen deeply. Follow along.</Text>
+    </View>
+  );
 
   return animate ? (
     <Animated.View
@@ -44,7 +53,7 @@ export function AnimatedSplashOverlay() {
         }
       })}
       style={styles.splashOverlay}>
-      {image}
+      {content}
     </Animated.View>
   ) : (
     <View
@@ -54,95 +63,60 @@ export function AnimatedSplashOverlay() {
         });
       }}
       style={styles.splashOverlay}>
-      {image}
+      {content}
     </View>
   );
 }
 
-const keyframe = new Keyframe({
-  0: {
-    transform: [{ scale: INITIAL_SCALE_FACTOR }],
-  },
-  100: {
-    transform: [{ scale: 1 }],
-    easing: Easing.elastic(0.7),
-  },
-});
-
-const logoKeyframe = new Keyframe({
-  0: {
-    transform: [{ scale: 1.3 }],
-    opacity: 0,
-  },
-  40: {
-    transform: [{ scale: 1.3 }],
-    opacity: 0,
-    easing: Easing.elastic(0.7),
-  },
-  100: {
-    opacity: 1,
-    transform: [{ scale: 1 }],
-    easing: Easing.elastic(0.7),
-  },
-});
-
-const glowKeyframe = new Keyframe({
-  0: {
-    transform: [{ rotateZ: '0deg' }],
-  },
-  100: {
-    transform: [{ rotateZ: '7200deg' }],
-  },
-});
-
 export function AnimatedIcon() {
   return (
     <View style={styles.iconContainer}>
-      <Animated.View entering={glowKeyframe.duration(60 * 1000 * 4)} style={styles.glow}>
-        <Image style={styles.glow} source={require('@/assets/images/logo-glow.png')} />
-      </Animated.View>
-
-      <Animated.View entering={keyframe.duration(DURATION)} style={styles.background} />
-      <Animated.View style={styles.imageContainer} entering={logoKeyframe.duration(DURATION)}>
-        <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />
-      </Animated.View>
+      <Image
+        style={styles.iconImage}
+        source={require('@/assets/images/splash-icon.png')}
+        contentFit="contain"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    justifyContent: 'center',
+  splashOverlay: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: '#101114',
     alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
   },
-  glow: {
-    width: 201,
-    height: 201,
-    position: 'absolute',
+  contentContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  splashImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#F4F1E8',
+    letterSpacing: 1.5,
+  },
+  subtitle: {
+    marginTop: 6,
+    fontSize: 13,
+    color: '#A5A5AD',
+    letterSpacing: 0.4,
   },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 128,
     height: 128,
-    zIndex: 100,
   },
-  image: {
-    width: 76,
-    height: 71,
-  },
-  background: {
-    borderRadius: 40,
-    experimental_backgroundImage: `linear-gradient(180deg, #3C9FFE, #0274DF)`,
+  iconImage: {
     width: 128,
     height: 128,
-    position: 'absolute',
-  },
-  splashOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#208AEF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
   },
 });
