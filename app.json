@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "insaat",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     // "newArchEnabled": false,
     "ios": {
       "icon": "./assets/expo.icon"

@@ -7,8 +7,11 @@ import { Alert, Animated, Pressable, Text, View } from "react-native";
 import Pdf from "react-native-pdf";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import AudioLines from "lucide-react-native/icons/audio-lines";
+import FileText from "lucide-react-native/icons/file-text";
 import Pause from "lucide-react-native/icons/pause";
 import Play from "lucide-react-native/icons/play";
+import Plus from "lucide-react-native/icons/plus";
 import RotateCcw from "lucide-react-native/icons/rotate-ccw";
 import RotateCw from "lucide-react-native/icons/rotate-cw";
 import X from "lucide-react-native/icons/x";
@@ -201,12 +204,12 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-insaat-background">
+    <SafeAreaView edges={["top", "left", "right"]} className="flex-1 bg-insaat-background">
       <StatusBar style="light" />
 
-      <View className="flex-1 px-5 pt-3 pb-4">
+      <View className="flex-1 px-5 pt-3 pb-1">
         {/* App header */}
-        <View className="mb-6 flex-row items-center justify-between">
+        <View className="mb-3.5 flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
             <View className="h-11 w-11 items-center justify-center rounded-2xl bg-insaat-accent">
               <Text className="text-xl font-bold text-insaat-background">
@@ -223,7 +226,6 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
-
         </View>
 
         {/* Reading section heading */}
@@ -327,7 +329,7 @@ export default function HomeScreen() {
           ) : (
             <View className="flex-1 items-center justify-center px-6">
               <View className="mb-5 h-16 w-16 items-center justify-center rounded-2xl border border-insaat-accent/30 bg-insaat-background">
-                <Text className="text-3xl text-insaat-accent">▤</Text>
+                <FileText size={30} color="#E6D4A8" strokeWidth={1.6} />
               </View>
 
               <Text className="text-center text-lg font-semibold text-insaat-text">
@@ -344,9 +346,7 @@ export default function HomeScreen() {
                 onPress={choosePdf}
                 className="mt-6 flex-row items-center gap-2 rounded-full bg-insaat-accent px-5 py-3"
               >
-                <Text className="text-lg font-medium text-insaat-background">
-                  +
-                </Text>
+                <Plus size={18} color="#101114" strokeWidth={2} />
                 <Text className="font-semibold text-insaat-background">
                   Choose a document
                 </Text>
@@ -356,11 +356,11 @@ export default function HomeScreen() {
         </View>
 
         {/* Persistent audio player */}
-        <View className="mt-4 rounded-3xl border border-white/10 bg-insaat-surface p-4">
+        <View className="mt-2.5 rounded-3xl border border-white/10 bg-insaat-surface p-4">
           <View className="mb-4 flex-row items-center justify-between">
             <View className="flex-1 flex-row items-center gap-3">
               <View className="h-11 w-11 items-center justify-center rounded-xl bg-insaat-background">
-                <Text className="text-xl text-insaat-accent">♫</Text>
+                <AudioLines size={22} color="#E6D4A8" strokeWidth={1.6} />
               </View>
 
               <View className="flex-1">
