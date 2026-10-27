@@ -31,7 +31,9 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="explore">
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require("@/assets/images/tabIcons/explore.png")}
+          sf="gearshape"
+          md="settings"
+          src={require("@/assets/images/tabIcons/settings.png")}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
