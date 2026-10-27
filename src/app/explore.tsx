@@ -1,180 +1,236 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  BookOpen,
+  ChevronDown,
+  ChevronRight,
+  Code2,
+  Headphones,
+  Moon,
+} from "lucide-react-native";
+import { useState, type ReactNode } from "react";
+import {
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-  const theme = useTheme();
+const GITHUB_URL = "https://github.com/sayeedmunees/insaat";
 
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+const DOCUMENTATION_URL =
+  "https://developer.android.com/training/data-storage/shared/documents-files";
 
+const ACCENT_COLOR = "#E6D4A8";
+
+function SettingRow({
+  icon,
+  title,
+  description,
+  onPress,
+}: {
+  icon: ReactNode;
+  title: string;
+  description?: string;
+  onPress?: () => void;
+}) {
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
+      className="min-h-[76px] flex-row items-center gap-3 rounded-2xl bg-insaat-surface px-4 py-3"
+      style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
+    >
+      <View className="w-7 items-center justify-center">{icon}</View>
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
+      <View className="flex-1 gap-1">
+        <Text className="text-[15px] font-semibold text-insaat-text">
+          {title}
+        </Text>
 
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+        {description ? (
+          <Text className="text-xs leading-5 text-insaat-muted">
+            {description}
+          </Text>
+        ) : null}
+      </View>
 
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+      {onPress ? <ChevronRight size={18} color={ACCENT_COLOR} /> : null}
+    </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
-});
+function SectionTitle({ children }: { children: string }) {
+  return (
+    <Text className="mt-2 text-xs font-semibold uppercase tracking-widest text-insaat-muted">
+      {children}
+    </Text>
+  );
+}
+
+export default function ExploreScreen() {
+  const insets = useSafeAreaInsets();
+  const [openFaq, setOpenFaq] = useState<string | null>(null);
+
+  const contentPadding = Platform.select({
+    android: {
+      paddingTop: insets.top + Spacing.four,
+      paddingBottom: insets.bottom + BottomTabInset + Spacing.four,
+    },
+    default: {
+      paddingTop: Spacing.four,
+      paddingBottom: Spacing.six,
+    },
+  });
+
+  const faqs = [
+    {
+      id: "about",
+      title: "What is Insaat?",
+      answer:
+        "Insaat is an offline reading and listening app that lets you read PDF documents while listening to your audio files in one place.",
+    },
+    {
+      id: "use",
+      title: "How to use Insaat?",
+      answer:
+        "Choose a PDF from your device to read it. Select your audio files to build a listening queue. Use the player controls to play, pause, seek, and move through your audio.",
+    },
+  ];
+
+  return (
+    <ScrollView
+      className="flex-1 bg-insaat-background"
+      contentContainerStyle={[
+        {
+          flexGrow: 1,
+          alignItems: "center",
+          paddingHorizontal: Spacing.four,
+        },
+        contentPadding,
+      ]}
+    >
+      <View className="w-full gap-3" style={{ maxWidth: MaxContentWidth }}>
+        {/* Page header */}
+        <Text className="text-[30px] font-bold leading-[38px] text-insaat-text">
+          Settings
+        </Text>
+
+        <Text className="-mt-2 mb-2 text-sm text-insaat-muted">
+          Make Insaat yours.
+        </Text>
+
+        {/* Appearance */}
+        <SectionTitle>Appearance</SectionTitle>
+
+        <View className="rounded-2xl bg-insaat-surface px-4">
+          <View className="min-h-[82px] flex-row items-center gap-3">
+            <View className="w-7 items-center justify-center">
+              <Moon size={21} color={ACCENT_COLOR} />
+            </View>
+
+            <View className="flex-1 gap-1">
+              <Text className="text-[15px] font-semibold text-insaat-text">
+                Dark theme
+              </Text>
+
+              <Text className="text-xs leading-5 text-insaat-muted">
+                Theme customization is coming soon.
+              </Text>
+            </View>
+
+            <Text className="text-xs font-semibold text-insaat-accent">
+              Soon
+            </Text>
+          </View>
+        </View>
+
+        {/* Library folders */}
+        <SectionTitle>Library folders</SectionTitle>
+
+        <View className="gap-2">
+          <SettingRow
+            icon={<BookOpen size={21} color={ACCENT_COLOR} />}
+            title="PDF Folder"
+            description="No folder selected"
+            onPress={() => Linking.openURL(DOCUMENTATION_URL)}
+          />
+
+          <SettingRow
+            icon={<Headphones size={21} color={ACCENT_COLOR} />}
+            title="Audio Folder"
+            description="No folder selected"
+            onPress={() => Linking.openURL(DOCUMENTATION_URL)}
+          />
+        </View>
+
+        <Text className="-mt-1 text-xs leading-5 text-insaat-muted">
+          Folder selection will be connected in a later step. Your existing PDF
+          and audio file selection on Home remains unchanged.
+        </Text>
+
+        {/* Frequently asked questions */}
+        <SectionTitle>Frequently asked questions</SectionTitle>
+
+        <View className="rounded-2xl bg-insaat-surface px-4">
+          {faqs.map((faq, index) => (
+            <View key={faq.id}>
+              {index > 0 ? <View className="h-px bg-white/10" /> : null}
+
+              <Pressable
+                onPress={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
+                className="min-h-[54px] flex-row items-center justify-between gap-2"
+              >
+                <Text className="flex-1 text-[15px] font-semibold text-insaat-text">
+                  {faq.title}
+                </Text>
+
+                {openFaq === faq.id ? (
+                  <ChevronDown size={18} color={ACCENT_COLOR} />
+                ) : (
+                  <ChevronRight size={18} color={ACCENT_COLOR} />
+                )}
+              </Pressable>
+
+              {openFaq === faq.id ? (
+                <Text className="pb-4 pr-3 text-sm leading-[21px] text-insaat-muted">
+                  {faq.answer}
+                </Text>
+              ) : null}
+            </View>
+          ))}
+        </View>
+
+        {/* App information */}
+        <View className="items-center gap-2 py-4">
+          <Text className="text-base font-semibold text-insaat-text">
+            Insaat
+          </Text>
+
+          <Text className="text-xs text-insaat-muted">Version 1.0.0</Text>
+
+          <Pressable
+            onPress={() => Linking.openURL(GITHUB_URL)}
+            className="flex-row items-center gap-2 py-2"
+            style={({ pressed }) => (pressed ? { opacity: 0.7 } : undefined)}
+          >
+            <Code2 size={16} color={ACCENT_COLOR} />
+
+            <Text className="text-xs text-insaat-muted">
+              View source code on GitHub
+            </Text>
+
+            <ChevronRight size={15} color={ACCENT_COLOR} />
+          </Pressable>
+
+          <Text className="text-center text-xs leading-5 text-insaat-muted">
+            © 2026 Insaat. Built for focused reading and listening.
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
