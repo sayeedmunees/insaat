@@ -23,6 +23,7 @@ import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useSettings } from "@/context/settings-context";
 
 const GITHUB_URL = "https://github.com/sayeedmunees/insaat";
+const GITHUB_ISSUES_URL = "https://github.com/sayeedmunees/insaat/issues";
 
 const DOCUMENTATION_URL =
   "https://developer.android.com/training/data-storage/shared/documents-files";
@@ -95,7 +96,7 @@ export default function ExploreScreen() {
     },
   });
 
-  const faqs = [
+  const faqs: { id: string; title: string; answer: ReactNode }[] = [
     {
       id: "about",
       title: "What is Insaat?",
@@ -107,6 +108,29 @@ export default function ExploreScreen() {
       title: "How to use Insaat?",
       answer:
         "Choose a PDF from your device to read it. Select your audio files to build a listening queue. Use the player controls to play, pause, seek, and move through your audio.",
+    },
+    {
+      id: "privacy",
+      title: "Is my data private? Does my data leave my phone?",
+      answer: (
+        <>
+          Yes. Your privacy matters. Insaat has no backend server, analytics, or
+          crash-reporting system. Your PDF files, audio files, and reading
+          activity stay on your device and are not sent to Insaat servers.
+          Insaat is designed to work locally, without uploading your personal
+          files or requiring an account.
+          {"\n\n"}
+          For bug reports or feature requests, you can contact us through{" "}
+          <Text
+            className="text-insaat-accent underline"
+            onPress={() => void Linking.openURL(GITHUB_ISSUES_URL)}
+          >
+            GitHub Issues
+          </Text>
+          . Please do not include sensitive personal information or private
+          documents in your reports.
+        </>
+      ),
     },
   ];
 
