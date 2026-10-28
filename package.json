@@ -1,7 +1,7 @@
 {
   "name": "insaat",
   "main": "expo-router/entry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dependencies": {
     "@config-plugins/react-native-blob-util": "^14.0.2",
     "@config-plugins/react-native-pdf": "^14.0.2",
@@ -18,6 +18,7 @@
     "expo-font": "~57.0.4",
     "expo-glass-effect": "~57.0.4",
     "expo-image": "~57.0.5",
+    "expo-keep-awake": "~57.0.2",
     "expo-linking": "~57.0.13",
     "expo-navigation-bar": "~57.0.3",
     "expo-router": "~57.0.29",

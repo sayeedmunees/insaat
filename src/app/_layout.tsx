@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
 import AppTabs from "@/components/app-tabs";
 import { Colors } from "@/constants/theme";
+import { SettingsProvider } from "@/context/settings-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,8 +36,10 @@ export default function TabLayout() {
 
   return (
     <ThemeProvider value={InsaatTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+      <SettingsProvider>
+        <AnimatedSplashOverlay />
+        <AppTabs />
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

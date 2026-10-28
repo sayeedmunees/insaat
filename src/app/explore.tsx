@@ -5,6 +5,7 @@ import {
   Code2,
   Headphones,
   Moon,
+  Sun,
 } from "lucide-react-native";
 import { useState, type ReactNode } from "react";
 import {
@@ -12,12 +13,14 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  Switch,
   Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import { useSettings } from "@/context/settings-context";
 
 const GITHUB_URL = "https://github.com/sayeedmunees/insaat";
 
@@ -74,6 +77,12 @@ function SectionTitle({ children }: { children: string }) {
 export default function ExploreScreen() {
   const insets = useSafeAreaInsets();
   const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const {
+    screenAwakeMode,
+    setScreenAwakeMode,
+    backgroundAudioEnabled,
+    setBackgroundAudioEnabled,
+  } = useSettings();
 
   const contentPadding = Platform.select({
     android: {
@@ -148,6 +157,112 @@ export default function ExploreScreen() {
           </View>
         </View>
 
+        {/* Playback & Display */}
+        <SectionTitle>Playback & Display</SectionTitle>
+
+        <View className="gap-3 rounded-2xl bg-insaat-surface p-4">
+          {/* Keep Screen Awake */}
+          <View>
+            <View className="flex-row items-center gap-3">
+              <View className="w-7 items-center justify-center">
+                <Sun size={21} color={ACCENT_COLOR} />
+              </View>
+
+              <View className="flex-1 gap-0.5">
+                <Text className="text-[15px] font-semibold text-insaat-text">
+                  Keep Screen Awake
+                </Text>
+
+                <Text className="text-xs leading-5 text-insaat-muted">
+                  Choose whether the display remains on while reading or listening in Insaat.
+                </Text>
+              </View>
+            </View>
+
+            {/* Selection control for Keep Screen Awake */}
+            <View className="mt-3 flex-row rounded-xl bg-insaat-background p-1">
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="System default screen timeout"
+                accessibilityState={{ selected: screenAwakeMode === "system" }}
+                onPress={() => void setScreenAwakeMode("system")}
+                className={`flex-1 items-center justify-center rounded-lg py-2.5 ${
+                  screenAwakeMode === "system"
+                    ? "border border-white/10 bg-insaat-surface"
+                    : ""
+                }`}
+                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              >
+                <Text
+                  className={`text-xs font-semibold ${
+                    screenAwakeMode === "system"
+                      ? "font-bold text-insaat-accent"
+                      : "text-insaat-muted"
+                  }`}
+                >
+                  System default
+                </Text>
+              </Pressable>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Keep screen awake while reading"
+                accessibilityState={{ selected: screenAwakeMode === "keep_awake" }}
+                onPress={() => void setScreenAwakeMode("keep_awake")}
+                className={`flex-1 items-center justify-center rounded-lg py-2.5 ${
+                  screenAwakeMode === "keep_awake"
+                    ? "border border-white/10 bg-insaat-surface"
+                    : ""
+                }`}
+                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+              >
+                <Text
+                  className={`text-xs font-semibold ${
+                    screenAwakeMode === "keep_awake"
+                      ? "font-bold text-insaat-accent"
+                      : "text-insaat-muted"
+                  }`}
+                >
+                  Keep screen awake
+                </Text>
+              </Pressable>
+            </View>
+
+            <Text className="mt-1.5 px-1 text-[11px] leading-4 text-insaat-muted/70">
+              {screenAwakeMode === "keep_awake"
+                ? "The display stays awake while viewing documents or playing lessons on the Home screen."
+                : "Follows your device's normal screen timeout behavior."}
+            </Text>
+          </View>
+
+          {/* Divider */}
+          <View className="h-px bg-white/10" />
+
+          {/* Background Audio Playback */}
+          <View className="flex-row items-center justify-between gap-3 py-1">
+            <View className="w-7 items-center justify-center">
+              <Headphones size={21} color={ACCENT_COLOR} />
+            </View>
+
+            <View className="flex-1 pr-2">
+              <Text className="text-[15px] font-semibold text-insaat-text">
+                Background Audio Playback
+              </Text>
+              <Text className="text-xs leading-5 text-insaat-muted">
+                Continue playing lessons when Insaat moves to the background or the screen is locked.
+              </Text>
+            </View>
+
+            <Switch
+              accessibilityLabel="Toggle background audio playback"
+              value={backgroundAudioEnabled}
+              onValueChange={(val) => void setBackgroundAudioEnabled(val)}
+              trackColor={{ false: "#202126", true: ACCENT_COLOR }}
+              thumbColor={backgroundAudioEnabled ? "#101114" : "#A5A5AD"}
+            />
+          </View>
+        </View>
+
         {/* Library folders */}
         <SectionTitle>Library folders</SectionTitle>
 
@@ -210,7 +325,7 @@ export default function ExploreScreen() {
             Insaat
           </Text>
 
-          <Text className="text-xs text-insaat-muted">Version 1.0.0</Text>
+          <Text className="text-xs text-insaat-muted">Version 1.1.0</Text>
 
           <Pressable
             onPress={() => Linking.openURL(GITHUB_URL)}

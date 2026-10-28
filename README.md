@@ -38,6 +38,11 @@ All features listed below are implemented and verified in the codebase:
   * Minimal speed button showing the active rate directly on the player bar.
   * Speed persists across track switches, pause/resume, and app restarts.
 
+* **Playback & Display Settings:**
+  * **Keep Screen Awake:** Choose between *System default* (standard device timeout) and *Keep screen awake* to keep the display on while reading documents or listening to lessons on the reader screen.
+  * **Background Audio Playback:** Toggle whether audio continues playing when the screen is locked, the display sleeps, or when switching to other apps. Features system lock-screen and notification media controls.
+  * Settings persist across restarts and are configurable directly from the Explore / Settings tab.
+
 * **Reliable Local Storage & Sandboxing:**
   * Selected documents and audio lessons are copied directly into the app's persistent storage directory (`FileSystem.documentDirectory`).
   * Files remain accessible even after system cache cleaning or app closure, without requiring broad external storage permissions.
@@ -65,8 +70,8 @@ Insaat is distributed as an installable Android APK via GitHub Releases. It is n
 ### How to Install
 
 1. Go to the [Insaat GitHub Releases](https://github.com/sayeedmunees/insaat/releases) page.
-2. Under the latest release (e.g., **v1.0.0**), expand the **Assets** section.
-3. Download the `insaat-v1.0.0.apk` file to your Android phone.
+2. Under the latest release (e.g., **v1.1.0**), expand the **Assets** section.
+3. Download the `insaat-v1.1.0.apk` file to your Android phone.
 4. Open the downloaded APK from your browser's download manager or your device's File Manager.
 5. If prompted by Android, enable **"Install unknown apps"** for your browser or file manager in Settings.
 6. Tap **Install** and launch Insaat.

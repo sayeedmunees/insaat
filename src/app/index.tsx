@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system/legacy";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
+import { useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -30,6 +32,8 @@ import RotateCw from "lucide-react-native/icons/rotate-cw";
 import SkipBack from "lucide-react-native/icons/skip-back";
 import SkipForward from "lucide-react-native/icons/skip-forward";
 import X from "lucide-react-native/icons/x";
+
+import { useSettings } from "@/context/settings-context";
 
 type AudioFile = {
   name: string;
@@ -75,7 +79,7 @@ async function ensureDirExists(dirUri: string) {
 async function persistFile(
   sourceUri: string,
   originalName: string,
-  type: "pdf" | "audio"
+  type: "pdf" | "audio",
 ): Promise<AudioFile> {
   const targetDir = type === "pdf" ? PDF_DIR : AUDIO_DIR;
   await ensureDirExists(targetDir);
@@ -128,11 +132,61 @@ export default function HomeScreen() {
   const previousDidJustFinishRef = useRef(false);
   const isRestoredRef = useRef(false);
 
+  const { screenAwakeMode, backgroundAudioEnabled } = useSettings();
+  const backgroundAudioEnabledRef = useRef(backgroundAudioEnabled);
+  backgroundAudioEnabledRef.current = backgroundAudioEnabled;
+
+  // Keep screen awake while reading/listening on Home screen when enabled
+  useFocusEffect(
+    useCallback(() => {
+      if (screenAwakeMode === "keep_awake") {
+        void activateKeepAwakeAsync("INSAAT_READING_TAG");
+      } else {
+        void deactivateKeepAwake("INSAAT_READING_TAG");
+        void deactivateKeepAwake();
+      }
+
+      return () => {
+        void deactivateKeepAwake("INSAAT_READING_TAG");
+        void deactivateKeepAwake();
+      };
+    }, [screenAwakeMode]),
+  );
+
   // Single stable audio player instance that lives through the session
   const player = useAudioPlayer(null);
   const status = useAudioPlayerStatus(player);
 
   const currentTrack = audioFiles[trackIndex] ?? null;
+
+  // Sync lock-screen and notification controls when background audio is enabled
+  useEffect(() => {
+    if (!player) return;
+    if (backgroundAudioEnabled && currentTrack) {
+      try {
+        player.setActiveForLockScreen(
+          true,
+          {
+            title: currentTrack.name,
+            artist: "Insaat",
+            albumTitle: "Insaat Lessons",
+          },
+          {
+            showSeekForward: true,
+            showSeekBackward: true,
+          },
+        );
+      } catch (e) {
+        console.warn("Failed to set lock screen controls:", e);
+      }
+    } else {
+      try {
+        player.clearLockScreenControls();
+      } catch (e) {
+        console.warn("Failed to clear lock screen controls:", e);
+      }
+    }
+  }, [backgroundAudioEnabled, currentTrack?.name, player]);
 
   // Track latest state in refs for session persistence without stale closures
   const pdfUriRef = useRef(pdfUri);
@@ -162,7 +216,7 @@ export default function HomeScreen() {
         console.warn("Error setting playback rate:", e);
       }
     },
-    [player]
+    [player],
   );
 
   function handleSelectSpeed(speed: number) {
@@ -191,6 +245,15 @@ export default function HomeScreen() {
           await player.seekTo(0);
         } catch {}
         applyPlaybackSpeed(playbackSpeedRef.current);
+        if (backgroundAudioEnabledRef.current) {
+          try {
+            player.updateLockScreenMetadata({
+              title: targetTrack.name,
+              artist: "Insaat",
+              albumTitle: "Insaat Lessons",
+            });
+          } catch {}
+        }
         if (shouldPlay) {
           player.play();
         }
@@ -198,7 +261,7 @@ export default function HomeScreen() {
         console.error("Error switching track:", err);
       }
     },
-    [player, applyPlaybackSpeed]
+    [player, applyPlaybackSpeed],
   );
 
   const hasAudio = audioFiles.length > 0;
@@ -253,7 +316,14 @@ export default function HomeScreen() {
     if (isRestoredRef.current) {
       void saveSessionImmediate();
     }
-  }, [pdfUri, pdfName, audioFiles, trackIndex, playbackSpeed, saveSessionImmediate]);
+  }, [
+    pdfUri,
+    pdfName,
+    audioFiles,
+    trackIndex,
+    playbackSpeed,
+    saveSessionImmediate,
+  ]);
 
   // Save session immediately when playback pauses
   useEffect(() => {
@@ -279,14 +349,23 @@ export default function HomeScreen() {
       "change",
       (nextState: AppStateStatus) => {
         if (nextState === "background" || nextState === "inactive") {
+          void deactivateKeepAwake("INSAAT_READING_TAG");
+          void deactivateKeepAwake();
           void saveSessionImmediate();
+
+          // When Background Audio is OFF: pause playback so it does not continue in background
+          if (!backgroundAudioEnabledRef.current) {
+            if (player && status.playing) {
+              player.pause();
+            }
+          }
         }
-      }
+      },
     );
     return () => {
       subscription.remove();
     };
-  }, [saveSessionImmediate]);
+  }, [player, status.playing, saveSessionImmediate]);
 
   // Restore session once on mount
   useEffect(() => {
@@ -319,7 +398,7 @@ export default function HomeScreen() {
         // 2. Restore playback speed
         if (session.playbackSpeed) {
           const validSpeed = PLAYBACK_SPEEDS.find(
-            (s) => s.value === session.playbackSpeed
+            (s) => s.value === session.playbackSpeed,
           );
           if (validSpeed) {
             setPlaybackSpeed(validSpeed.value);
@@ -347,7 +426,7 @@ export default function HomeScreen() {
           if (validTracks.length > 0 && !isCancelled) {
             const clampedIndex = Math.max(
               0,
-              Math.min(session.trackIndex ?? 0, validTracks.length - 1)
+              Math.min(session.trackIndex ?? 0, validTracks.length - 1),
             );
             setAudioFiles(validTracks);
             setTrackIndex(clampedIndex);
@@ -403,7 +482,7 @@ export default function HomeScreen() {
           const persisted = await persistFile(
             selectedPdf.uri,
             selectedPdf.name,
-            "pdf"
+            "pdf",
           );
           setPdfName(persisted.name);
           setPdfUri(persisted.uri);
@@ -470,7 +549,7 @@ export default function HomeScreen() {
               return [singleTrack];
             } else {
               const alreadyExists = prevFiles.some(
-                (f) => f.name === singleTrack.name && f.uri === singleTrack.uri
+                (f) => f.name === singleTrack.name && f.uri === singleTrack.uri,
               );
               if (alreadyExists) return prevFiles;
               return [...prevFiles, singleTrack];
@@ -489,6 +568,7 @@ export default function HomeScreen() {
   function clearPlaylist() {
     try {
       player.pause();
+      player.clearLockScreenControls();
     } catch {}
     setAudioFiles([]);
     setTrackIndex(0);
@@ -634,10 +714,10 @@ export default function HomeScreen() {
               }}
               onTouchEnd={(event) => {
                 const dx = Math.abs(
-                  event.nativeEvent.pageX - touchStart.current.x
+                  event.nativeEvent.pageX - touchStart.current.x,
                 );
                 const dy = Math.abs(
-                  event.nativeEvent.pageY - touchStart.current.y
+                  event.nativeEvent.pageY - touchStart.current.y,
                 );
                 const elapsed = Date.now() - touchStart.current.time;
 
@@ -823,7 +903,7 @@ export default function HomeScreen() {
               if (status.duration <= 0 || progressWidth <= 0) return;
               const ratio = Math.max(
                 0,
-                Math.min(event.nativeEvent.locationX / progressWidth, 1)
+                Math.min(event.nativeEvent.locationX / progressWidth, 1),
               );
               void player.seekTo(ratio * status.duration);
             }}
@@ -831,7 +911,7 @@ export default function HomeScreen() {
               if (status.duration <= 0 || progressWidth <= 0) return;
               const ratio = Math.max(
                 0,
-                Math.min(event.nativeEvent.locationX / progressWidth, 1)
+                Math.min(event.nativeEvent.locationX / progressWidth, 1),
               );
               void player.seekTo(ratio * status.duration);
             }}
@@ -984,7 +1064,7 @@ export default function HomeScreen() {
             <View className="mb-3 flex-row items-center justify-between border-b border-white/10 pb-3">
               <View className="flex-row items-center gap-2">
                 <Gauge size={18} color="#E6D4A8" strokeWidth={1.8} />
-                <Text className="text-sm font-bold uppercase tracking-wider text-insaat-text">
+                <Text className="text-sm font-bold  tracking-wider text-insaat-text">
                   Playback Speed
                 </Text>
               </View>
