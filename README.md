@@ -7,7 +7,7 @@ Insaat is a free and open-source, offline-focused mobile application that combin
 [![GitHub Release](https://img.shields.io/github/v/release/sayeedmunees/insaat?color=E6D4A8&label=Release)](https://github.com/sayeedmunees/insaat/releases)
 [![Platform](https://img.shields.io/badge/Platform-Android-green?color=101114)](https://github.com/sayeedmunees/insaat/releases)
 [![Expo SDK](https://img.shields.io/badge/Expo_SDK-57-blue?color=202126)](https://docs.expo.dev/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue?color=E6D4A8)](LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue?color=E6D4A8)](LICENSE)
 
 ---
 
@@ -171,16 +171,16 @@ Please review the [LICENSE](LICENSE) terms regarding contributions prior to subm
 
 Copyright (c) 2026 Sayeed Munees.
 
-This project is licensed under the **GNU General Public License v3.0** (GPL-3.0).
+This project is licensed under the **GNU Affero General Public License v3.0** (AGPL-3.0).
 
-Insaat is free and open-source software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Insaat is free and open-source software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-### Key Points of GPLv3
+### Key Points of AGPLv3
 
 * **Freedom to use:** Run the application for personal, educational, or commercial purposes.
 * **Freedom to study and modify:** Access and alter the source code to fit your needs.
 * **Freedom to share:** Redistribute original or modified copies.
-* **Copyleft:** Any distributed derivative work or modified version must also be licensed under GPL-3.0 and provide source code.
+* **Copyleft & Network clause:** Any distributed derivative work or network-accessible version must also be licensed under AGPL-3.0 and make its full source code available.
 * **No Warranty:** The software is provided "as is", without warranty of any kind.
 
 For full legal terms, please read the complete [LICENSE](LICENSE) file.
