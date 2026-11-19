@@ -2,6 +2,7 @@
   "name": "insaat",
   "main": "expo-router/entry",
   "version": "1.1.0",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "@config-plugins/react-native-blob-util": "^14.0.2",
     "@config-plugins/react-native-pdf": "^14.0.2",

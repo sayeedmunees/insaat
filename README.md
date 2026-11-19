@@ -2,12 +2,12 @@
 
 > **"Listen deeply. Follow along."**
 
-Insaat is an offline-focused mobile application that combines a document reader with a synchronized audio lesson player. Built with React Native and Expo, Insaat provides a focused, distraction-free environment for reading texts, lectures, and study materials alongside accompanying audio recordings without requiring an internet connection.
+Insaat is a free and open-source, offline-focused mobile application that combines a document reader with a synchronized audio lesson player. Built with React Native and Expo, Insaat provides a focused, distraction-free environment for reading texts, lectures, and study materials alongside accompanying audio recordings without requiring an internet connection.
 
 [![GitHub Release](https://img.shields.io/github/v/release/sayeedmunees/insaat?color=E6D4A8&label=Release)](https://github.com/sayeedmunees/insaat/releases)
 [![Platform](https://img.shields.io/badge/Platform-Android-green?color=101114)](https://github.com/sayeedmunees/insaat/releases)
 [![Expo SDK](https://img.shields.io/badge/Expo_SDK-57-blue?color=202126)](https://docs.expo.dev/)
-[![License](https://img.shields.io/badge/License-Source--Available-yellow?color=E6D4A8)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue?color=E6D4A8)](LICENSE)
 
 ---
 
@@ -171,18 +171,17 @@ Please review the [LICENSE](LICENSE) terms regarding contributions prior to subm
 
 Copyright (c) 2026 Sayeed Munees.
 
-Insaat is published as **source-available** software under the [Insaat Source-Available License](LICENSE).
+This project is licensed under the **GNU General Public License v3.0** (GPL-3.0).
 
-### Summary of Terms
+Insaat is free and open-source software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-* **Allowed:**
-  * Viewing and inspecting the source code.
-  * Downloading, compiling, and running Insaat for your own personal, non-commercial use on personal devices.
-  * Submitting bug reports, feature suggestions, and contributions to this repository.
-* **Not Allowed Without Prior Written Permission:**
-  * Redistributing, hosting, or publishing the software, binaries (such as `.apk` files), or modified versions to third parties.
-  * Publishing or distributing Insaat on app stores (Google Play, Apple App Store, F-Droid, or third-party stores).
-  * Selling, sublicensing, or commercially exploiting the software.
+### Key Points of GPLv3
+
+* **Freedom to use:** Run the application for personal, educational, or commercial purposes.
+* **Freedom to study and modify:** Access and alter the source code to fit your needs.
+* **Freedom to share:** Redistribute original or modified copies.
+* **Copyleft:** Any distributed derivative work or modified version must also be licensed under GPL-3.0 and provide source code.
+* **No Warranty:** The software is provided "as is", without warranty of any kind.
 
 For full legal terms, please read the complete [LICENSE](LICENSE) file.
 
