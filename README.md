@@ -2,7 +2,7 @@
 
 > **"Listen deeply. Follow along."**
 
-Insaat is a free and open-source, offline-focused mobile application that combines a document reader with a synchronized audio lesson player. Built with React Native and Expo, Insaat provides a focused, distraction-free environment for reading texts, lectures, and study materials alongside accompanying audio recordings without requiring an internet connection.
+Insaat is a free and open-source, offline-first mobile application that combines a document reader with an audio lesson player. Built with React Native and Expo, it provides a focused, distraction-free environment for reading texts, books, and study materials alongside accompanying audio lessons without requiring an internet connection.
 
 [![GitHub Release](https://img.shields.io/github/v/release/sayeedmunees/insaat?color=E6D4A8&label=Release)](https://github.com/sayeedmunees/insaat/releases)
 [![Platform](https://img.shields.io/badge/Platform-Android-green?color=101114)](https://github.com/sayeedmunees/insaat/releases)
